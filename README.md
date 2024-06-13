@@ -1,5 +1,5 @@
 # Project Name
-dracuzi's new outlet
+dracuzi's news outlet
 
 ## Getting Started
 
