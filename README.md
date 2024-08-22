@@ -1,4 +1,5 @@
 # Project Name
+dracuzi's news outlet
 
 ## Getting Started
 
@@ -16,7 +17,7 @@ To get started with this project, follow these steps:
 
 3. **Install the required dependencies:**
    ```bash
-   npm install
+   npm install express ejs
    ```
 
 4. **Start the development server:**
