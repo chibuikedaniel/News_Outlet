@@ -40,6 +40,6 @@ const Post = dataBase.define("post", {
         allowNull: false,
     },
 },{
-    tableName: "post",
+    tableName: "posts",
     timestamps: true,
 });
