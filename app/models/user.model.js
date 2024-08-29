@@ -3,8 +3,8 @@ const {dataBase} = require("../database/index");
 
 const User = dataBase.define("user", {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     },
     fullname: {
@@ -16,11 +16,11 @@ const User = dataBase.define("user", {
         allowNull: false,
     },
     thumbnail: {
-        type:DataTypes.Hyperlink,
+        type:DataTypes.STRING,
         allowNull: false,
     },
     SocialMedia: {
-        type:DataTypes.Hyperlink,
+        type:DataTypes.STRING,
         allowNull: false,
     },
     email: {
@@ -40,3 +40,5 @@ const User = dataBase.define("user", {
     tableName: "users",
     timestamps: true,
 });
+
+module.exports = User;

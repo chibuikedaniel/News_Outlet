@@ -1,10 +1,10 @@
 const {DataTypes } = require("sequelize");
 const {dataBase} = require("../database/index");
 
-const Post = dataBase.define("post", {
+const Post = dataBase.define("Post", {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     },
     title: {
@@ -32,7 +32,7 @@ const Post = dataBase.define("post", {
         type: DataTypes.INTEGER,
     },
     bannerImage: {
-        type:DataTypes.Hyperlink,
+        type:DataTypes.STRING,
         allowNull: false,
     },
     tags: {
@@ -43,3 +43,6 @@ const Post = dataBase.define("post", {
     tableName: "posts",
     timestamps: true,
 });
+
+
+module.exports = Post;
