@@ -2,6 +2,7 @@ const express = require("express");
 require('dotenv').config();
 const path = require("path");
 const {initdataBase} = require("../app/database/init");
+const seedRecords = require("./seed/index.seed")
 
 const app = express();
 const PORT = 3000;
@@ -118,6 +119,17 @@ const blogPosts = [
 app.get("/", (req, res) => {
     try {
         return res.render("pages/home", { blogPosts });
+    } catch (e) {
+        return res.render("pages/404", { message: e.message });
+    }
+});
+
+app.get("/seed-data", async (req, res) => {
+    try {
+        if(process.env.ENVIROMENT == "dev"){
+            await seedRecords();
+        }
+        return res.json({message:"Seed Worked"});
     } catch (e) {
         return res.render("pages/404", { message: e.message });
     }
