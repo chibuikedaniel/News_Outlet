@@ -1,25 +1,12 @@
-const express = require("express");
-require('dotenv').config();
-const path = require("path");
-const {initdataBase} = require("../app/database/init");
-const seedRecords = require("./seed/index.seed");
-const postSeedRecords = require("./seed/post.seed");
-
-const app = express();
-const PORT = 3000;
-
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views"));
-app.use(express.static(path.join(__dirname, "../public")));
+const { createPost } = require("../service/post.service");
 
 
 const blogPosts = [
     {
-        id: "1e21c09a-1234-4f09-8f9e-1234567890ab",
         title: "The Future of Artificial Intelligence: Trends to Watch in 2024",
         author: "Sarah Johnson",
         authorDescription: "Sarah Johnson is a leading tech journalist with a passion for artificial intelligence and emerging technologies. She has been writing about the tech industry for over a decade and is known for her insightful analysis and forward-thinking perspectives.",
-        authorThumbnail: "https://randomuser.me/api/portraits/women/44.jpg",
+        authorThumbnail: "https://via.placeholder.com/150/0000FF/808080?text=Sarah+Johnson",
         authorSocialMedia: {
             twitter: "@SarahTech",
             linkedin: "https://linkedin.com/in/sarahjohnson"
@@ -35,11 +22,10 @@ const blogPosts = [
         tags: ["AI", "Machine Learning", "Technology Trends"]
     },
     {
-        id: "2a34f09b-5678-4b19-8a7e-9876543210cd",
         title: "5G Technology: How It's Changing the World",
         author: "Michael Lee",
         authorDescription: "Michael Lee is a technology analyst and writer who specializes in telecommunications and connectivity advancements. With a background in electrical engineering, Michael provides deep insights into the technological transformations shaping our connected world.",
-        authorThumbnail: "https://randomuser.me/api/portraits/men/90.jpg",
+        authorThumbnail: "https://via.placeholder.com/150/008000/808080?text=Michael+Lee",
         authorSocialMedia: {
             twitter: "@MikeLeeTech",
             linkedin: "https://linkedin.com/in/michaellee"
@@ -55,11 +41,10 @@ const blogPosts = [
         tags: ["5G", "Connectivity", "Innovation"]
     },
     {
-        id: "3b56d78c-9012-4c98-9b7e-3456789012ef",
         title: "Cybersecurity in 2024: Top Threats and How to Stay Safe",
         author: "Jessica Green",
         authorDescription: "Jessica Green is a cybersecurity expert and consultant with over 15 years of experience in the field. She regularly shares her knowledge on protecting digital assets and staying ahead of cyber threats through her writing and speaking engagements.",
-        authorThumbnail: "https://randomuser.me/api/portraits/women/30.jpg",
+        authorThumbnail: "https://via.placeholder.com/150/FF0000/808080?text=Jessica+Green",
         authorSocialMedia: {
             twitter: "@JessicaCyber",
             linkedin: "https://linkedin.com/in/jessicagreen"
@@ -75,11 +60,10 @@ const blogPosts = [
         tags: ["Cybersecurity", "Threats", "Online Safety"]
     },
     {
-        id: "4d67e89d-3456-4d21-8b9e-4567890123gh",
         title: "Quantum Computing: Breaking Down the Basics",
         author: "David Smith",
         authorDescription: "David Smith is a physicist and technology writer with a focus on quantum computing and advanced computing technologies. His work demystifies complex scientific concepts, making them accessible to a broad audience.",
-        authorThumbnail: "https://randomuser.me/api/portraits/men/78.jpg",
+        authorThumbnail: "https://via.placeholder.com/150/000000/808080?text=David+Smith",
         authorSocialMedia: {
             twitter: "@DavidQuantum",
             linkedin: "https://linkedin.com/in/davidsmith"
@@ -95,11 +79,10 @@ const blogPosts = [
         tags: ["Quantum Computing", "Technology", "Innovation"]
     },
     {
-        id: "5e78f90e-6789-4e32-9b7e-5678901234ij",
         title: "The Rise of Blockchain: Beyond Cryptocurrencies",
         author: "Emily White",
         authorDescription: "Emily White is a blockchain strategist and writer known for her expertise in decentralized technologies and their applications beyond cryptocurrencies. She advises startups and established companies on integrating blockchain solutions to drive innovation and efficiency.",
-        authorThumbnail: "https://randomuser.me/api/portraits/women/90.jpg",
+        authorThumbnail: "https://via.placeholder.com/150/FFA500/808080?text=Emily+White",
         authorSocialMedia: {
             twitter: "@EmilyBlockchain",
             linkedin: "https://linkedin.com/in/emilywhite"
@@ -114,47 +97,20 @@ const blogPosts = [
         bannerImage: "https://i.kinja-img.com/image/upload/c_fit,q_60,w_645/c97365d8048aa21b7100f8c728e03877.jpg",
         tags: ["Blockchain", "Cryptocurrency", "Technology"]
     }
-]
+];
 
 
-app.get("/", (req, res) => {
-    try {
-        return res.render("pages/home", { blogPosts });
-    } catch (e) {
-        return res.render("pages/404", { message: e.message });
+const postSeedRecords = async () => {
+    console.log("hello")
+    for (const element of blogPosts) {
+        console.log(element)
+        //    await createPost(element); 
+        delete element.authorDescription;
+        delete element.authorThumbnail;
+        delete element.authorSocialMedia;
+        const data = await createPost({ ...element, tags: JSON.stringify(element.tags) });
+        console.log(data)
     }
-});
+}
 
-app.get("/seed-data", async (req, res) => {
-    try {
-        await postSeedRecords();
-        if(process.env.ENVIROMENT == "dev"){
-            // await seedRecords();
-            console.log("Running")
-        }
-        return res.json({message:"Seed Worked"});
-    } catch (e) {
-        console.log(e)
-        return res.render("pages/404", { message: e.message });
-    }
-})
-
-app.get("/post/:id", (req, res) => {
-    try {
-        const postId = req.params.id;
-        let postData = blogPosts.filter((post) => (post.id == postId));
-        if (postData.length == 0) {
-            return res.render("pages/404", { message: "Post does not exist" });
-        }
-        const post = postData[0]
-        return res.render("pages/post", { post });
-    } catch (e) {
-        return res.render("pages/404", { message: e.message });
-    }
-})
-
-
-app.listen(PORT, async() => {
-    await initdataBase();
-    console.log("listening to PORT" + PORT)
-})
+module.exports = postSeedRecords;

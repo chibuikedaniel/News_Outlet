@@ -15,14 +15,6 @@ const User = dataBase.define("user", {
         type:DataTypes.TEXT,
         allowNull: false,
     },
-    thumbnail: {
-        type:DataTypes.STRING,
-        allowNull: false,
-    },
-    SocialMedia: {
-        type:DataTypes.STRING,
-        allowNull: false,
-    },
     email: {
         type: DataTypes.STRING,
         unique: true,
@@ -31,10 +23,6 @@ const User = dataBase.define("user", {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    role: {
-        type: DataTypes.ENUM('admin', 'user'),
-        defaultValue: 'user',
     },
 },{
     tableName: "users",

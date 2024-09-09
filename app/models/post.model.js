@@ -36,7 +36,7 @@ const Post = dataBase.define("Post", {
         allowNull: false,
     },
     tags: {
-        type:DataTypes.STRING,
+        type:DataTypes.TEXT,
         allowNull: false,
     },
 },{
