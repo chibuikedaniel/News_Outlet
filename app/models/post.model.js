@@ -7,12 +7,16 @@ const Post = dataBase.define("Post", {
         autoIncrement: true,
         primaryKey: true,
     },
+    userId: {
+        type:DataTypes.INTEGER,
+        allowNull: false,
+    },
     title: {
         type:DataTypes.STRING,
         allowNull: false,
     },
-    category: {
-        type:DataTypes.TEXT,
+    categoryId: {
+        type:DataTypes.INTEGER,
         allowNull: false,
     },
     date: {
