@@ -159,3 +159,63 @@ async function seedRecord(record) {
 
 
 
+const { seedRecords, postSeedRecords } = require('./seedFunctions'); // Assuming these are imported
+
+app.get("/seed-data", async (req, res) => {
+    try {
+        if (process.env.ENVIRONMENT === "dev") {
+            console.log("Starting seeding process...");
+
+            // Modify seedRecords to handle existing records
+            const { seeded, skipped } = await seedRecordsWithCheck();
+            console.log(`Main seeding complete. Seeded: ${seeded}, Skipped: ${skipped}`);
+
+            // Assuming postSeedRecords doesn't need modification, but you might want to apply similar logic
+            await postSeedRecords();
+            console.log("Post-seeding process completed");
+
+            console.log("Seeding process finished");
+        } else {
+            console.log("Seeding skipped: Not in dev environment");
+        }
+        return res.json({ message: "Seed operation completed" });
+    } catch (e) {
+        console.error("Error during seeding:", e);
+        return res.status(500).json({ error: e.message });
+    }
+});
+
+// New function to handle seeding with existence check
+async function seedRecordsWithCheck() {
+    const records = await getRecordsToSeed();
+    let seededCount = 0;
+    let skippedCount = 0;
+
+    for (const record of records) {
+        if (await recordExists(record)) {
+            console.log(`Record already exists, skipping: ${JSON.stringify(record)}`);
+            skippedCount++;
+        } else {
+            await seedRecord(record);
+            seededCount++;
+        }
+    }
+
+    return { seeded: seededCount, skipped: skippedCount };
+}
+
+// Helper functions (to be implemented based on your specific needs)
+async function getRecordsToSeed() {
+    // Implementation depends on your data source
+    // This should return an array of records to be seeded
+}
+
+async function recordExists(record) {
+    // Implementation depends on your database and schema
+    // This should return true if the record already exists, false otherwise
+}
+
+async function seedRecord(record) {
+    // Implementation depends on your database and schema
+    // This should insert the record into the database
+}
